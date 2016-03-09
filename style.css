@@ -1,0 +1,170 @@
+html, body {
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#header {
+  background: #004394;
+  color: #FFFFFF;
+  border-bottom: 4px solid #002C61;
+  flex: 0 0 auto;
+  padding: 0 1.5rem;
+}
+
+body, #wrapper {
+  display: flex;
+}
+
+body {
+  flex-direction: column;
+}
+
+#wrapper {
+  flex: 1 1 auto;
+}
+
+#map {
+  flex: 2 1 0px;
+}
+
+#footer {
+  flex: 0 0 auto;
+  font-size: .75rem;
+  color: #666;
+  border-top: 2px solid #E3E0D9;
+  padding: .25rem;
+}
+
+#sidebar {
+  flex: 1 1 0px;
+  border-right: 2px solid #E3E0D9;
+  display: flex;
+  flex-direction: column;
+}
+
+#results {
+  flex: 0 0 auto;
+  padding: .25rem .75rem;
+  margin: 0;
+  background: #E3E0D9;
+  font-size: .75rem;
+  line-height: .75rem;
+}
+
+.skip {
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  background-color: #002C61;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.skip:focus {
+  width: auto;
+  height: auto;
+  padding: .5rem 1rem;
+  clip: auto;
+}
+
+.skip:hover, .skip:focus {
+  background-color: #002C61;
+}
+
+#list {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+#list section {
+  padding: 1rem .75rem;
+  margin: 0;
+}
+
+#list h2 {
+  margin-top: 0;
+}
+
+#list section + section {
+  border-top: 2px solid #E3E0D9;
+}
+
+a {
+  color: #004394;
+}
+
+a:hover {
+  color: #002C61;
+}
+
+address {
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: .5rem 1rem;
+  font-size: .825rem;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  background-color: #004394;
+}
+
+button:hover, button:focus {
+  background-color: #002C61;
+}
+
+.arcgisSearch {
+  flex: 0 0 auto;
+}
+
+.arcgisSearch .searchGroup .searchInput {
+  width: 100%;
+  float: none;
+  box-sizing: border-box;
+  padding: 0 .75rem;
+  border-radius: 0;
+  height: 36px;
+  border: none;
+  border-bottom: 2px solid #E3E0D9;
+  border-right: 2px solid #E3E0D9;
+}
+
+.arcgisSearch .searchBtn {
+  border: none;
+  border-bottom: 2px solid #E3E0D9;
+  border-radius: 0;
+  box-sizing: border-box;
+  height: 36px;
+  width: 3rem;
+}
+
+.arcgisSearch .searchInputGroup {
+  float: none;
+  position: static;
+}
+
+.arcgisSearch .searchGroup {
+  display: flex;
+}
+
+.arcgisSearch .searchExpandContainer {
+  float: none;
+  flex: 1 0 auto;
+}
+
+.arcgisSearch .searchClear {
+  right: 52px;
+}
