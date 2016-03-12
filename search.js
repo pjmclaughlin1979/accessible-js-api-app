@@ -10,7 +10,7 @@ define([
    expanded: true,
    minCharacters: 3,
    enableSourcesMenu: false,
-   allPlaceholder: 'Search for an address or restraunts',
+   allPlaceholder: 'Search for an address or restaurants',
    enableHighlight: false,
    autoNavigate: false,
    autoSelect: false

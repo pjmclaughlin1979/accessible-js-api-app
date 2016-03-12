@@ -2,16 +2,37 @@ require([
   './map.js', './layer.js', './search.js', './popup.js', './point-to-extent.js',
   'esri/tasks/query', 'esri/geometry/geometryEngine', 'esri/layers/FeatureLayer',
   'dojo/text!./list-item.html',
-  'dojo/string', 'dojo/on', 'dijit/focus', 'dijit/a11y'
+  'dojo/string', 'dojo/on',
+  'dijit/focus', 'dijit/a11y'
 ], function(
   map, restaurants, search, popup, pointToExtent,
   Query, geometryEngine, FeatureLayer,
   listTemplate,
-  string, on,  focus, a11y
+  string, on,
+  focus, a11y
 ) {
-  // utility that will reformat the list based on a new
-  // list of features and update the ARIA live region
-  // that will speak a summary of the results
+
+  /**
+   * Focus the search widget when someone clicks
+   * the "Skip to search" skip link.
+   */
+  document.getElementById('skip-search').addEventListener('click', function (e) {
+    search.focus();
+  });
+
+  /**
+   * Focus the first focusable item in the list
+   * when someone clicks the "Skip to list" link
+   */
+  document.getElementById('skip-list').addEventListener('click', function (e) {
+    focusFirstItemInList();
+  });
+
+  /**
+   * Utility function toreformat the list based
+   * on a new array of features and update the
+   * ARIA live region will speak the passed string
+   */
   function updateList (features, liveRegionText) {
     var newList = '';
 
@@ -24,28 +45,54 @@ require([
     document.getElementById('list').innerHTML = newList;
   }
 
-  // when the feature layer is ready set the extent of the
-  // map to include all the restaurants
+  /**
+   * Utility function to focus the first focusable
+   * item in the list. You can use Dojo's very helpful
+   * a11y and focus methods for this.
+   */
+  function focusFirstItemInList () {
+    var firstFocusableItem = a11y.getFirstInTabbingOrder('list');
+    focus.focus(firstFocusableItem);
+  }
+
+  /**
+   * Utility function to focus on a specific restraunt
+   */
+  function focusOnRestraunt (id) {
+    var restrauntSection = a11y.getFirstInTabbingOrder('restraunt-' + selectedFeature)
+    focus.focus(restrauntSection);
+  }
+
+  /**
+   * When the feature layer is ready set the extent
+   * of the map to include all the restaurants.
+   */
   restaurants.on('load', function () {
     map.setExtent(restaurants.fullExtent);
   });
 
-  // when the layer is done loading all its features update
-  // the list with the current list of features
+  /**
+   * When the layer is done loading features, update
+   * the list to match the current array of features.
+   */
   restaurants.on('update-end', function () {
     updateList(restaurants.graphics, restaurants.graphics.length + ' restaurants loaded.');
   });
 
-  // Update the list when we get search
-  // results from our search dijit
+  /**
+   * Since our search widget is not setup to
+   * automatically navigate or select results
+   * we can handle it ourselves by listening to
+   * the search-results event.
+   */
   search.on('search-results', function () {
-    // set our results by source.
+    // get the results accordingto the source
     // [0] is the feature layer of restaurants
     // [1] is the world geocoder
     var restrauntResults = search.searchResults && search.searchResults[0];
     var geocoderResults = search.searchResults && search.searchResults[1];
 
-    // there are restaurants matching the search
+    // if there are restaurants matching the search
     if(restrauntResults && restrauntResults.length) {
       // use the restraunt name if there is only 1 feature
       // otherwise use the value of the text in the search
@@ -55,7 +102,8 @@ require([
       updateList(restrauntResults, restrauntResults.length + ' restaurants matching ' + textValue + '.');
 
       // focus the first item in the list
-      focus.focus(a11y.getFirstInTabbingOrder('list'));
+      focusFirstItemInList();
+
       return;
     }
 
@@ -70,9 +118,9 @@ require([
       });
 
       updateList(restaurantsInExtent, restaurantsInExtent.length + ' restaurants near ' + textValue + '.');
-      console.log(extent);
       map.setExtent(extent);
-      focus.focus(a11y.getFirstInTabbingOrder('list'));
+      focusFirstItemInList();
+
       return;
     }
 
@@ -83,24 +131,32 @@ require([
     search.focus();
   });
 
-  // when the search is cleared update the list and refocus
-  // the search input
+  /**
+   * When the search is cleared update the
+   * list and refocus the search input
+   */
   search.on('clear-search', function () {
     updateList(restaurants.graphics, 'Search cleared. Showing ' + restaurants.graphics.length + ' restaurants.');
     search.focus();
   });
 
-  // when the escape key is pressed clear our
-  // current search and refocus our input
+  /**
+   * When the escape key is pressed clear our
+   * current search and refocus our input.
+   */
   on(document, 'keyup', function (e) {
     if(e.keyCode === 27) {
       search.clear();
       search.focus();
+      e.preventDefault();
+      e.stopPropagation();
     }
   });
 
-  // when an item on the list is clicked find the
-  // feature that was clicked and open its popup
+  /**
+   * When an item on the list is clicked find the
+   * feature that was clicked and open its popup.
+   */
   on(document.getElementById('list'), 'button:click', function (e) {
     var id = parseInt(this.dataset.id, 10);
     var feature = restaurants.graphics.filter(function(graphic) {
@@ -113,26 +169,36 @@ require([
 
   var selectedFeature;
 
-  // when we show or update a popup focus
-  // the item in the list
+  /**
+   * When we show a popup change the selected feature
+   * or update the set of features, select the new item
+   * in the list.
+   */
   popup.on('show, selection-change, set-features', function (e) {
     var feature = popup.getSelectedFeature();
     selectedFeature = feature ? feature.attributes.FID : undefined;
     if (selectedFeature) {
-      focus.focus(a11y.getFirstInTabbingOrder('restraunt-' + selectedFeature));
+      focusOnRestraunt(selectedFeature);
     }
   });
 
-  // when a popup is closed return the focus to the same spot in the list
+  /**
+   * When a popup closes return focus to the
+   * corresponding list item so users don't get
+   * trapped inside the map.
+   */
   popup.on('hide', function (e) {
     if(selectedFeature) {
-      focus.focus(a11y.getFirstInTabbingOrder('restraunt-' + selectedFeature));
-      selectedFeature = undefined;
+      focusOnRestraunt(selectedFeature);
     }
+
+    selectedFeature = undefined;
   });
 
-  // when we click the map, query the layer to
-  // get the first feature and show its popup.
+  /**
+   * When we click the map, query the layer to
+   * get the first feature and show its popup.
+   */
   map.on('click', function (event) {
     var query = new Query();
     query.geometry = pointToExtent(map, event.mapPoint, 4);
@@ -145,6 +211,8 @@ require([
     }
   });
 
-  // kick everything off by adding our layer to the map
+  /**
+   * Kick everything off by adding our layer to the map
+   */
   map.addLayer(restaurants);
 });

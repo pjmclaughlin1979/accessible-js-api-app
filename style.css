@@ -126,6 +126,12 @@ button:hover, button:focus {
   background-color: #002C61;
 }
 
+/**
+ * Customization of the search widget to
+ * integrate it into the sidebar at the
+ * full width
+ */
+
 .arcgisSearch {
   flex: 0 0 auto;
 }
