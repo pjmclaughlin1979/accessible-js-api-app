@@ -10,7 +10,7 @@ define([
   });
 
   var marker = new PictureMarkerSymbol({
-    "url": "/marker-w-shadow.png",
+    "url": "./marker-w-shadow.png",
     "width": 13.5,
     "height": 25,
     "type": "esriPMS",
