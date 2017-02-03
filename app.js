@@ -29,7 +29,7 @@ require([
   });
 
   /**
-   * Utility function toreformat the list based
+   * Utility function to reformat the list based
    * on a new array of features and update the
    * ARIA live region will speak the passed string
    */
