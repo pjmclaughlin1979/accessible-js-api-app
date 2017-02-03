@@ -8,7 +8,7 @@ define([
     infoWindow: popup
   });
 
-  var topographic = new VectorTileLayer("https://www.arcgis.com/sharing/rest/content/items/c50de463235e4161b206d000587af18b/resources/styles/root.json");
+  var topographic = new VectorTileLayer("https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer");
 
   map.addLayer(topographic);
 
