@@ -8,4 +8,4 @@ This app has several interesting features including:
 * ARIA live regions for speaking dynamic text to users
 * Semantic document structure
 
-Start at [index.html](index.html) and [app.js](app.js).
+https://pjmclaughlin1979.github.io/accessible-js-api-app/index.html
